@@ -1,17 +1,17 @@
 #!/bin/bash
 #
 # Copyright (C) 2018 smallmuou <smallmuou@163.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is furnished
 # to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,7 +37,7 @@ info() {
 }
 
 cmdcheck() {
-    command -v $1>/dev/null 2>&1 || { error >&2 "Please install command $1 first."; exit 1; }   
+    command -v $1>/dev/null 2>&1 || { error >&2 "Please install command $1 first."; exit 1; }
 }
 
 error() {
@@ -139,7 +139,7 @@ dst_path=$2
 # check source file
 [ ! -f "$src_file" ] && { error "The source file $src_file does not exist, please check it."; exit -1; }
 
-# check width and height 
+# check width and height
 src_width=`sips -g pixelWidth $src_file 2>/dev/null|awk '/pixelWidth:/{print $NF}'`
 src_height=`sips -g pixelHeight $src_file 2>/dev/null|awk '/pixelHeight:/{print $NF}'`
 
@@ -149,34 +149,79 @@ if [ $src_width -ne $src_height ];then
     warn "The height and width of the source image are different, will cause image deformation."
 fi
 
-# create dst directory 
+# create dst directory
 [ ! -d "$dst_path" ] && mkdir -p "$dst_path"
 
 # ios sizes refer to https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/
 # macos sizes refer to https://developer.apple.com/design/human-interface-guidelines/macos/icons-and-images/app-icon/
 # watchos sizes refer to https://developer.apple.com/design/human-interface-guidelines/watchos/icons-and-images/home-screen-icons/
-# 
-# 
+#
+#
 # name size
+# sizes_mapper=`cat << EOF
+# Icon-16         16
+# Icon-16@2x      32
+# Icon-32         32
+# Icon-32@2x      64
+# Icon-128        128
+# Icon-128@2x     256
+# Icon-256        256
+# Icon-256@2x     256
+# Icon-512        512
+# Icon-512@2x     1024
+# Icon-20@2x      40
+# Icon-20@3x      60
+# Icon-29@2x      58
+# Icon-29@3x      87
+# Icon-40@2x      80
+# Icon-40@3x      120
+# Icon-60@2x      120
+# Icon-60@3x      180
+# Icon-76@2x      152
+# Icon-83.5@2x    167
+# Icon-1024       1024
+# Icon-24@2x      48
+# Icon-27.5@2x    55
+# Icon-86@2x      172
+# Icon-98@2x      196
+# Icon-108@2x     216
+# Icon-44@2x      88
+# Icon-50@2x      100
+# EOF`
+
 sizes_mapper=`cat << EOF
 Icon-16         16
 Icon-16@2x      32
 Icon-32         32
 Icon-32@2x      64
+Icon-36         36
+Icon-36@2x      72
 Icon-128        128
 Icon-128@2x     256
 Icon-256        256
-Icon-256@2x     256
+Icon-256@2x     512
 Icon-512        512
 Icon-512@2x     1024
+Icon-20      20
 Icon-20@2x      40
 Icon-20@3x      60
+Icon-29      29
 Icon-29@2x      58
 Icon-29@3x      87
+Icon-40      40
 Icon-40@2x      80
+Icon-50      50
+Icon-50@2x      100
+Icon-57      57
+Icon-57@2x      114
 Icon-40@3x      120
 Icon-60@2x      120
 Icon-60@3x      180
+Icon-72      72
+Icon-70      70
+Icon-104    104
+Icon-72@2x      144
+Icon-76      76
 Icon-76@2x      152
 Icon-83.5@2x    167
 Icon-1024       1024
@@ -185,7 +230,11 @@ Icon-27.5@2x    55
 Icon-86@2x      172
 Icon-98@2x      196
 Icon-108@2x     216
+Icon-182     182
+Icon-182@2x     364
+Icon-203    203
 Icon-44@2x      88
+Icon-50      50
 Icon-50@2x      100
 EOF`
 
